@@ -1,20 +1,25 @@
-# seed_data.py — Demo Data Generator
+import sqlite3
 
-# # Responsibilities:
+# Connect to the existing database
+conn = sqlite3.connect("database/users.db")
+cur = conn.cursor()
 
-# # Fetch random users (external API)
+# Insert an admin user
+cur.execute("""
+INSERT INTO users (username, email, password_hash, role)
+VALUES (?, ?, ?, ?)
+""", ("admin", "admin@example.com", "hashed_password_here", "admin"))
 
-# # Insert demo data into database
+# Optional: insert some demo users
+demo_users = [
+    ("user1", "user1@example.com", "hashed_password_here", "user"),
+    ("user2", "user2@example.com", "hashed_password_here", "user")
+]
 
-# # Used for:
+cur.executemany("""
+INSERT INTO users (username, email, password_hash, role)
+VALUES (?, ?, ?, ?)
+""", demo_users)
 
-# # First-time setup
-
-# # Testing
-
-# # Demo screenshots
-
-# # Rules:
-# # ❌ No UI
-# # ❌ No authentication logic
-# # ✅ Data population only
+conn.commit()
+conn.close()

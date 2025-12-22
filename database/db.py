@@ -1,16 +1,20 @@
-# db.py — Database Engine Manager
+import sqlite3
 
-# Responsibilities:
+# Connect (creates users.db if it doesn't exist)
+conn = sqlite3.connect("database/users.db")
+cur = conn.cursor()
 
-# Open / close SQLite connection
+# Create users table
+cur.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL,
+    is_active INTEGER DEFAULT 1
+)
+""")
 
-# Initialize database
-
-# Run migrations or table creation
-
-# Provide session/connection to other layers
-
-# Rules:
-# ❌ No UI
-# ❌ No business rules
-# ✅ Only database setup
+conn.commit()
+conn.close()

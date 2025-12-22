@@ -1,3 +1,4 @@
+
 # user_service.py — User Operations
 
 # Responsibilities:
@@ -14,3 +15,4 @@
 # ❌ No UI widgets
 # ❌ No SQL strings inside UI
 # ✅ Business rules live here
+
