@@ -14,3 +14,8 @@
 # ❌ No UI
 # ❌ No DB table creation
 # ✅ Security logic only
+
+class AuthService:
+    @staticmethod
+    validateLogin(username:str,pass:str):
+    

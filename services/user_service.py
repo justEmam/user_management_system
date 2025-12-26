@@ -72,10 +72,63 @@ class UserService:
             
             conn.commit()
             conn.close()
+            return user
+
+class AdminService(UserService):
+    @staticmethod
+    def isAdmin(user_id:int) -> bool:
+        conn = sqlite3.connect('database/users.db')
+        cursor = conn.cursor()
+        cursor.execute("""SELECT 1 FROM users WHERE id = ? AND role = 'admin'""", (user_id,))
+        if cursor.fetchone():
+            conn.close()
+            return True
+        else:
+            conn.close()
+            return False
+
+
+    @staticmethod
+    def deleteUser(admin_id:int,username:str) -> None:
+        if AdminService.isAdmin(admin_id):
+            conn = sqlite3.connect('database/users.db')
+            cursor = conn.cursor()
+            cursor.execute("""SELECT 1 FROM users WHERE username = ?""",(username,))
+            if cursor.fetchone() is None:
+                conn.close()
+                raise ValueError("User doesn't exist")  
+            else:
+                cursor.execute("""
+    DELETE FROM users WHERE username = ?""",(username,))
+                conn.commit()
+                conn.close()
+        else:
+            raise PermissionError("Only admins can delete users.")
+    @staticmethod
+    def deactivateUser(admin_id:int, username:str) -> None:
+        if AdminService.isAdmin(admin_id):
+
+            conn = sqlite3.connect('database/users.db')
+            cursor = conn.cursor()
+
+            cursor.execute("""SELECT 1 FROM users WHERE username = ?""" , (username,))
+            if cursor.fetchone() is None:
+                conn.close()
+                raise ValueError("User doesn't exist")
+            else:
+                cursor.execute("""UPDATE users SET is_active = 0 WHERE username = ?""",(username,))
+                conn.commit()
+                conn.close()
+        else:
+            raise PermissionError("Only admins can deactivate users")
+
+
+            
+                
+                
 
 #Stop now
 #To do -> User can change only his password (1)
 #Users can search users by username, just like in forums. (2)
 #Admin can delete users, and change password of any user(3), and deactivate any user.(4)
-
 
